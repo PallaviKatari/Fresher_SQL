@@ -1,6 +1,5 @@
 --DATA DEFINITION
-
-use Trainees
+USE Trainees
 
 select * from batch35
 
@@ -106,4 +105,8 @@ EDesignation varchar(25) default 'Trainee'
 insert into emp(EID,EName,EAge) values(3,'Jamie',25)
 
 select * from emp
+
+select * from s2.t1
+
+alter table s2.t1 add empid as (id+100)
 
