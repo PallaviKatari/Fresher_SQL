@@ -130,6 +130,6 @@ select Top 3 with ties empname,salary from batch35 order by salary desc
   alter table batch35 alter column empname varchar(20) collate Modern_Spanish_CI_AS;
 
   select * from batch35 where empname like '[JTP]%' COLLATE SQL_Latin1_General_CP1_CS_AS;
-  select * from batch35 where empname like '[jtp]%' COLLATE SQL_Latin1_General_CP1_CS_AS;
+  select * from batch35 where empname like 'sa%' COLLATE SQL_Latin1_General_CP1_CS_AS;
 
 

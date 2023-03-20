@@ -74,7 +74,7 @@ SELECT empname,ASCII(empname) AS NumCodeOfFirstChar FROM batch35;
 select ASCII('A') as Uppercase;
 select ASCII('a') as Lowercase;
 
-SELECT CHAR(65) AS CodeToCharacter;
+SELECT CHAR(FLOOR(RAND()*97)) AS CodeToCharacter;
 
 SELECT CHARINDEX('t', 'Trainee') AS MatchPosition;--CHARINDEX(substring, string, start)
 SELECT CHARINDEX('in', 'Trainee') AS MatchPosition;
@@ -94,7 +94,7 @@ The integer value indicates the match for the two SOUNDEX values, from 0 to 4.
 0 indicates weak or no similarity between the SOUNDEX values.
 4 indicates strong similarity or identically SOUNDEX values.*/
 
-SELECT DIFFERENCE('Trainees', 'Trainees') as Difference;
+SELECT DIFFERENCE('Trainee', 'Trainees') as Difference;
 
 --Return a string with 1 space:
 SELECT concat(empname,'''s salary is ',space(1),salary) as Details from batch35;
@@ -231,6 +231,10 @@ CREATE TABLE dbo.test
     );  
 INSERT INTO dbo.test   
 VALUES ('1998-09-20 7:45:50.71345 -5:00');  
+INSERT INTO dbo.test   
+VALUES ('1998-09-20 7:45:50.71345 -5:30');  
+INSERT INTO dbo.test   
+VALUES ('1998-09-20 7:45:50.71345 +5:30');  
  
 SELECT SWITCHOFFSET (ColDatetimeoffset, '-08:00')   
 FROM dbo.test;  --temporary retrieval
