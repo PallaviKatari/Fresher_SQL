@@ -85,7 +85,7 @@ select empid,empname,depid,designation from Testing
 select empid,empname,depid,designation from DeptDev
 union
 select empid,empname,depid,designation from Testing
---ORDER BY empname
+ORDER BY empname
 
 --UNION ALL
 select empid,empname,depid,designation from DeptDev
@@ -109,6 +109,7 @@ SELECT empid,empname,depid,designation
 --The GROUP BY statement is often used with aggregate functions
 --(COUNT(), MAX(), MIN(), SUM(), AVG()) to group the result-set by one or more columns.
 	SELECT * FROM Trainees35;
+	SELECT COUNT(empname) as 'No of Employees'FROM Trainees35
 	SELECT COUNT(empname) as 'No of Employees', designation FROM Trainees35 GROUP BY designation;
 	SELECT AVG(empid) AS Average,designation FROM Trainees35 GROUP BY designation;
 	SELECT MAX(empid) AS Maximum, designation FROM Trainees35 GROUP BY designation;
@@ -123,7 +124,7 @@ SELECT empid,empname,depid,designation
 
 --HAVING CLAUSE
 	SELECT AVG(empid) AS Average,designation FROM Trainees35 GROUP BY designation WHERE AVG(empid)>112 order by designation;--NOT ALLOWED
-	SELECT AVG(empid) AS Average,designation FROM Trainees35 GROUP BY designation HAVING AVG(empid)>112 order by designation;
+	SELECT AVG(empid) AS Average,designation FROM Trainees35 GROUP BY designation HAVING AVG(empid)>110 order by designation;
 
 /*GROUPING SET is an extension of the GROUP BY clause. 
 The GROUP BY statement is GROUPING SET is an extension of the GROUP BY clause. 
@@ -181,6 +182,8 @@ GROUP BY ROLLUP (DESIGNATION);
       salary INT NOT NULL,
       department VARCHAR(50) NOT NULL
    )
+   select * from employee1
+
    INSERT INTO employee1
   VALUES
   (1, 'David', 'Male', 5000, 'Sales'),
@@ -265,7 +268,7 @@ select * from batch35;
 SELECT empname,designation, salary,
 CASE designation 
     WHEN 'Developer' THEN 'CGVAK DEVELOPER DEPARTMENT'  
-    WHEN 'Tester' THEN 'CGVAK DESIGNER DEPARTMENT'  
+    WHEN 'Tester' THEN 'CGVAK TESTER DEPARTMENT'  
     WHEN 'HR' THEN 'CGVAK HR DEPARTMENT'  
     ELSE 'CGVAK LEAD DEPARTMENT'  
 END AS Department  
@@ -304,6 +307,7 @@ CREATE TABLE Employees
     Name NVARCHAR(50),
     Gender NVARCHAR(10)
 );
+select * from employees
 -- Generate and insert Sequence values
 INSERT INTO Employees VALUES
 (NEXT VALUE for [dbo].[SequenceObject], 'Ben', 'Male');
@@ -319,6 +323,7 @@ CREATE SEQUENCE [dbo].[SequenceObject]
 AS INT
 START WITH 100
 INCREMENT BY -1
+
 CREATE SEQUENCE [dbo].[SequenceObject]
 START WITH 100
 INCREMENT BY 10

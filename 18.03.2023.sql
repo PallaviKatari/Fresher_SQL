@@ -94,12 +94,12 @@ The integer value indicates the match for the two SOUNDEX values, from 0 to 4.
 0 indicates weak or no similarity between the SOUNDEX values.
 4 indicates strong similarity or identically SOUNDEX values.*/
 
-SELECT DIFFERENCE('Trainee', 'Trainees') as Difference;
+SELECT DIFFERENCE('Trainees', 'Trainees') as Difference;
 
 --Return a string with 1 space:
-SELECT concat(empname,'''s salary is ',space(1),salary) as Details from batch35;
+SELECT concat(empname,'''s salary is ',space(5),salary) as Details from batch35;
 
-SELECT STR(185.476, 6, 2);--STR(number, length, decimals)
+SELECT STR(1852.476, 6, 2);--STR(number, length, decimals)
 SELECT STR(185.5);
 
 --The STUFF() function deletes a part of a string and then inserts another part into the string, starting at a specified position.
