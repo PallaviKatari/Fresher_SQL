@@ -61,7 +61,7 @@ If a table has no clustered index its data rows are stored in an unordered struc
  Moreover, the index will have pointers to the storage location of the actual data.*/
  
  use trainees;
- select * from trainees35 where empid<115 ; --display execution or ctrl+L
+ select * from trainees35 where empid=115 ; --display execution or ctrl+L
  --You will not find any performance issues currently as the number of records is less. 
  --But if your table contains a huge amount of data let say 1000000 records, then it will definitely take much more time to get the data.
 
@@ -74,9 +74,14 @@ If a table has no clustered index its data rows are stored in an unordered struc
  --CREATE INDEX index_name ON table_name(column_name ASC);
 
  --DROP INDEX table_name.index_name;
- drop index index_name;
 
-EXEC sp_helpindex 'Trainees35'
+select * from batch35;
+create clustered index ind_empname on batch35(empname)
+create index ind_des on batch35(designation)
+drop index batch35.ind_des;
+
+EXEC sp_helpindex 'batch35'
+EXEC sp_helpindex 'trainees35'
 
 SELECT
  name AS Index_Name,
@@ -111,17 +116,23 @@ select * from trainees35 WHERE id=3; -- specific record
 
 --CREATE NONCLUSTERED INDEX index_name ON table_name (column_name) WHERE condition
 
+create index ind_hr on batch35(designation) where designation='HR'
+
+select designation from batch35 where designation='HR'
+
 ----------------------------------------------------------------------------------
 select * from batch35;
 /*RANK Function in SQL Server
 The RANK Function in SQL Server is a kind of Ranking Function. 
 This function will assign the number to each row within the partition of an output. 
 It assigns the rank to each row as one plus the previous row rank.
-When the RANK function finds two values that are identical within the same partition, it assigns them with the same rank number. 
+When the RANK function finds two values that are identical within the same partition, 
+it assigns them with the same rank number. 
 In addition, the next number in the ranking will be the previous rank plus duplicate numbers. 
 Therefore, this function does not always assign the ranking of rows in consecutive order.
 
-The RANK function is also a sub-part of window functions. The following points should be remembered while using this function:
+The RANK function is also a sub-part of window functions. 
+The following points should be remembered while using this function:
 
 It always works with the OVER() clause.
 It assigns a rank to each row based on the ORDER BY clause.
@@ -131,6 +142,8 @@ It always assigns a rank to rows, starting with one for each new partition.*/
 --RANK() Function
 --This function is used to determine the rank for each row in the result set.
 --skips the rank - likerank system in schools
+
+select * from batch35;
 
 SELECT empname,designation,salary,
 RANK () OVER (ORDER BY salary desc) AS Rank_No   
@@ -195,7 +208,7 @@ FROM batch35;
 
 -------------------------------------------------------------------
 --The FIRST_VALUE() function is a window function that returns the first value in an ordered partition of a result set.
-
+select * from batch35
 SELECT 
     empname,designation,salary,
     FIRST_VALUE(designation) OVER(ORDER BY salary) firstvalue
@@ -220,7 +233,7 @@ FROM
 
 --The LAST_VALUE() function is a window function that returns the last value in an ordered partition of a result set.
 
-SELECT TOP 15 empname, 
+SELECT empname, 
 designation, salary, LAST_VALUE(salary) 
 OVER 
 (ORDER BY designation ASC ) AS Last_salary
@@ -276,7 +289,7 @@ FROM
 
 SELECT 
     empname,designation,salary,
-    format(PERCENT_RANK() OVER(ORDER BY salary),'p') percentage
+    format(PERCENT_RANK() OVER(ORDER BY salary),'c','fr-FR') percentage
 FROM 
     batch35;
 ------------------------------------------------------------------------------
@@ -410,3 +423,9 @@ INNER JOIN Customers1 AS C
 ON O.CustID = C.CustID
 INNER JOIN Products1 as P
 ON O.ProdID = P.ProductID
+
+
+exec ##Temp 
+use dml;
+
+SELECT trainees.dbo.FN_CalculateAge ('01/07/2018')AS AGE
