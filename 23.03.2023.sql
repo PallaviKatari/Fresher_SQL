@@ -276,11 +276,34 @@ RETURN (
     SELECT emp.EID, emp.EName, dept.Dept_Name 
     FROM employee emp
     JOIN departments dept on emp.EDID = dept.Dept_id
-    WHERE Dept_name = @Designation)
+    WHERE Dept_name = 'Angular Development')
 
 SELECT * FROM dbo.FN_EmployeessByDesignation('Angular Development');
 select * from Employee;
 select * from Departments;
+
+select * from onlinecustomers;
+select * from orders1;
+
+ALTER FUNCTION FN_orderdetails
+(
+  @city varchar(25)
+)
+RETURNS TABLE
+AS
+RETURN (
+		select oc.customerid,oc.customername,oc.customercity,oc.customermail,o.orderid,o.ordertotal,o.discountrate,o.orderdate
+		from onlinecustomers oc
+		inner join
+		orders1 o
+		on oc.customerid=o.customerid where oc.customercity=@city
+		)
+
+select * from FN_orderdetails('Chicago')
+
+select * from onlinecustomers;
+
+
 
 -----------------------------------------------------------
 /*Multi-Statement Table-Valued Function in SQL Server
@@ -529,7 +552,7 @@ Specific to a Vendor: Stored procedures written in one platform cannot run on an
 CREATE PROCEDURE sp_AddTwoNumbers(@no1 INT, @no2 INT)
 AS
 BEGIN
-SET NOCOUNT ON; 
+  --SET NOCOUNT ON; 
   DECLARE @Result INT
   SET @Result = @no1 + @no2
   PRINT 'RESULT IS: '+ CAST(@Result AS VARCHAR)
@@ -545,10 +568,10 @@ EXEC sp_AddTwoNumbers @no1=10, @no2=20
 sp_AddTwoNumbers @no1=10, @no2=20
 -- OR calling the procedure by declaring two variables as shown below
 
-DECLARE @no1 INT, @no2 INt
-SET @no1 = 10
-SET @no2 = 20
-EXECUTE sp_AddTwoNumbers @no1, @no2
+DECLARE @num1 INT, @num2 INt
+SET @num1 = 10
+SET @num2 = 20
+EXECUTE sp_AddTwoNumbers @num1, @num2
 
 -- Create a Procedure for Update
 select * from batch35;
@@ -570,7 +593,7 @@ END
 
 -- Executing the Procedure
 -- If you are not specifying the Parameter Names then the order is important
-EXECUTE sp_UpdateBatch35byID 'Tom',100000, 'Testing'
+EXECUTE sp_UpdateBatch35byID 'john',60000, 'HR'
 
 select * from Batch35;
 
@@ -598,8 +621,9 @@ empname varchar(25),
 depid int,
 designation varchar(25)
 )
+drop table T_HR;
 --CREATE PROCEDURE FOR INSERT
-CREATE PROCEDURE sp_InsertStoredProcedure
+ALTER PROCEDURE sp_InsertStoredProcedure
 	@des VARCHAR(50)
 AS
 BEGIN
@@ -611,11 +635,11 @@ BEGIN
 			   --select * from T_HR;
 			   --ALTER PROCEDURE AND TRY WITH DELETE
 END
-
+select * from T_HR
 exec sp_InsertStoredProcedure 'HR'
 
 --PROCEDURE WITH IF THEN
-CREATE PROCEDURE sp_conditional
+ALTER PROCEDURE sp_conditional
 AS
 BEGIN
     DECLARE @x INT = 10, @y INT = 20;
@@ -640,7 +664,7 @@ BEGIN
     IF (@empid  > 0)
     BEGIN
         IF (@empid  > 110)
-            select * from trainees35;
+            select * from trainees35 where empid=@empid;
         ELSE
             PRINT 'Record no found';
     END			
@@ -654,7 +678,7 @@ Create PROCEDURE sp_Name_Finder
 AS
 BEGIN
   IF((SELECT empname FROM Trainees35 
-  WHERE empname = @name) = @name)
+  WHERE empname = 'Tommy') = @name)
     BEGIN
 	Print 'The Trainee is: '+@name 
     END
@@ -664,7 +688,7 @@ BEGIN
     END
 END
 
-exec sp_Name_Finder 'Tom';
+exec sp_Name_Finder 'Tommy';
 
 --Procedure using case statement
 select * from trainees35;
