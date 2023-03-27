@@ -104,5 +104,4 @@ From the connection in which the temporary table created, you can manually remov
 
 DROP TABLE #departmentReact;
 DROP TABLE ##departmentAngular;
-
-
+

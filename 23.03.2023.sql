@@ -547,6 +547,7 @@ Specific to a Vendor: Stored procedures written in one platform cannot run on an
 
 -----------------------------------------------
 --STORED PROCEDURE EXAMPLES
+use trainees
 
 -- Create a Procedure with table variables
 CREATE PROCEDURE sp_AddTwoNumbers(@no1 INT, @no2 INT)
@@ -593,7 +594,7 @@ END
 
 -- Executing the Procedure
 -- If you are not specifying the Parameter Names then the order is important
-EXECUTE sp_UpdateBatch35byID 'john',60000, 'HR'
+EXECUTE sp_UpdateBatch35byID 'John',60000, 'HR'
 
 select * from Batch35;
 
@@ -670,15 +671,15 @@ BEGIN
     END			
 END
 
-EXEC sp_trainees35_cond 115
+EXEC sp_trainees35_cond 110
 
 ----PROCEDURE WITH IF THEN on table Trainees28
-Create PROCEDURE sp_Name_Finder
+Alter PROCEDURE sp_Name_Finder
 ( @name varchar(50) )
 AS
 BEGIN
   IF((SELECT empname FROM Trainees35 
-  WHERE empname = 'Tommy') = @name)
+  WHERE empname = @name) = @name)
     BEGIN
 	Print 'The Trainee is: '+@name 
     END
@@ -690,10 +691,12 @@ END
 
 exec sp_Name_Finder 'Tommy';
 
+EXEC sp_helptext 'sp_Name_Finder'
+
 --Procedure using case statement
 select * from trainees35;
 
-CREATE PROCEDURE sp_case
+ALTER PROCEDURE sp_case with encryption
 AS
 BEGIN
 SELECT empid,empname,designation,
@@ -706,6 +709,13 @@ FROM trainees35;
 END;
 
 exec sp_case;
+
+EXEC sp_helptext 'sp_case'
+
+select * from #departmentReact
+
+
+select * from ##departmentAngular;
 
 
 
