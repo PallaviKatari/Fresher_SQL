@@ -69,7 +69,7 @@ customermail varchar(25),
 INSERT INTO customersordersbackup 
    SELECT customerid,customername,customercity,customermail FROM onlinecustomers   
    WHERE customerid IN (SELECT customerid
-   FROM orders1 where ordertotal >600);
+   FROM orders1 where ordertotal >600); --(3,5)
 
 select * from customersordersbackup;
 truncate table customersordersbackup;
@@ -106,7 +106,7 @@ INSERT INTO [dbo].[orders1]([customerid],[ordertotal],[discountrate],[orderdate]
 
 /*Independent Nested Queries: In independent nested queries, query execution starts from innermost query to outermost queries. 
 The execution of inner query is independent of outer query, but the result of inner query is used in execution of outer query.
-Various operators like IN, NOT IN, ANY, ALL etc are used in writing independent nested queries.*/
+Various operators like IN, NOT IN, ANY, ALL etc are used in writing independent nested queries.*/ --(3,7)
 
 --Find details of customers who have ordered.(simple subquery)
 SELECT * FROM onlineCustomers WHERE 
@@ -125,8 +125,8 @@ select * from orders1;
 select * from sales;
 
 Select salesid,orderid,salestotal,CustomerID = (select customerid from orders1 o where o.orderid=s.orderid) from sales s where orderid IN
-(Select orderid from orders1 where customerid IN
-(SELECT customerid from onlinecustomers where CustomerCity='Chicago'  or CustomerCity='New York'));
+(Select orderid from orders1 where customerid IN --(1,4)
+(SELECT customerid from onlinecustomers where CustomerCity='Chicago'  or CustomerCity='New York'));--(3,7)
 
 --ANY ALL OPERATORS
 --ANY means that the condition will be true if the operation is true for any of the values in the range.
@@ -136,18 +136,17 @@ select * from orders1;
 select * from sales;
 
 SELECT customerid,customername,customercity,customermail FROM onlinecustomers 
-WHERE customerid = Any (SELECT customerid FROM orders1);
+WHERE customerid = All (SELECT customerid FROM orders1);
 
 SELECT * , OrderID = (select orderid from orders1 o where o.customerid=oc.customerid)
 FROM onlinecustomers oc
-WHERE customerid = Any (SELECT customerid
+WHERE customerid > Any (SELECT customerid
                        FROM orders1
                        WHERE orderid<5);
-
 					   
 SELECT * , OrderID = (select orderid from orders1 o where o.customerid=oc.customerid)
 FROM onlinecustomers oc
-WHERE customerid = All (SELECT customerid
+WHERE customerid > All (SELECT customerid
                        FROM orders1
                        WHERE orderid<5);
 					 
@@ -164,23 +163,3 @@ SELECT * FROM onlineCustomers where
 NOT EXISTS (SELECT CustomerID FROM Orders1 
 WHERE Orders1.CustomerID=onlineCustomers.CustomerID);
 
---SQL correlated subquery in the WHERE clause example
---The following query finds all employees whose score is higher than the average score of the employees in their departments
-SELECT 
-    *
-FROM
-    Trainees35 t
-WHERE
-    empid > (SELECT 
-            AVG(empid)
-        FROM
-            Trainees35
-        WHERE
-            designation = t.designation) --correlated query
-ORDER BY 
-   designation,empid,empname;
-
-SELECT 
-    *
-FROM
-    Trainees35;

@@ -689,7 +689,7 @@ BEGIN
     END
 END
 
-exec sp_Name_Finder 'Tommy';
+exec sp_Name_Finder 'Tom';
 
 EXEC sp_helptext 'sp_Name_Finder'
 
