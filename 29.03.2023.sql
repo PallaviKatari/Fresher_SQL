@@ -321,3 +321,76 @@ GO
 EXEC sp_dep 100, 'Testing'
 
 select * from DB_Errors
+
+--Varchar(10) - character excess exception
+create table character
+(
+name varchar(10)
+)
+CREATE PROCEDURE sp_character @name VARCHAR(10)
+AS
+  BEGIN TRY
+    INSERT INTO character
+         SELECT
+			@name
+  END TRY
+  BEGIN CATCH
+    INSERT INTO dbo.DB_Errors
+    VALUES
+  (SUSER_SNAME(),
+   ERROR_NUMBER(),
+   ERROR_STATE(),
+   ERROR_SEVERITY(),
+   ERROR_LINE(),
+   ERROR_PROCEDURE(),
+   ERROR_MESSAGE(),
+   GETDATE());
+  END CATCH
+GO
+
+EXEC sp_character 'Paul Walker' --accept 10 characters
+
+select * from character
+
+insert into character values('Paul Walker') -- String or binary data would be truncated in table 'Trainees.dbo.character', column 'name'. Truncated value: 'Paul Walke'.
+
+--num1=num2
+CREATE PROCEDURE sp_equal
+@Number1 INT, 
+@Number2 INT
+AS
+BEGIN
+    DECLARE @Result INT
+    SET @Result = 1
+    IF(@Number1 <> @Number2)
+    BEGIN
+         RAISERROR('Numbers are not equal', 16, 7) --(MSG,SEVERITY,STATE)
+    END
+    ELSE
+    BEGIN
+        SET @Result = @Number1 * @Number2
+        PRINT 'RESULT IS : '+ CAST(@Result AS VARCHAR)
+    END
+END
+
+exec sp_equal 2,1
+
+--name like A%
+ALTER PROCEDURE sp_name
+@Name varchar(25)
+AS
+BEGIN
+    IF(@Name not like 'A%')
+    BEGIN
+         THROW 50001,'Error! Not a valid name',1
+    END
+    ELSE
+    BEGIN
+        insert into character values (@Name)
+		select * from character
+    END
+END
+
+exec sp_name 'John'
+
+select * from character
