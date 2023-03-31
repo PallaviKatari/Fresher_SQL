@@ -13,7 +13,7 @@ use trainees;
 ALTER PROCEDURE spDivideTwoNumber(
 @Number1 INT, 
 @Number2 INT
-)
+)s
 AS
 BEGIN
     DECLARE @Result INT

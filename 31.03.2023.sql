@@ -1,13 +1,13 @@
-﻿use dml;
-
-/*A cursor in SQL Server is a database object that allows us to retrieve each row at a time and manipulate its data. 
+﻿/*A cursor in SQL Server is a database object that allows us to retrieve each row at a time and manipulate its data. 
 A cursor is nothing more than a pointer to a row.
 The SQL Server
 cursor's purpose is to update the data row by row, change it, or perform calculations 
 that are not possible when we retrieve all records at once. */
 
---SQL Server Cursor Example A SQL Server cursor is a set of T-SQL logic to loop over a predetermined number of rows one at a time. 
---The purpose for the cursor may be to update one row at a time or perform an administrative process such as SQL Server database backups in a sequential
+--SQL Server Cursor Example 
+--A SQL Server cursor is a set of T-SQL logic to loop over a predetermined number of rows one at a time. 
+--The purpose for the cursor may be to update one row at a time or perform an 
+--administrative process such as SQL Server database backups in a sequential
 
 /*
 Life Cycle of the cursor
@@ -47,8 +47,10 @@ Since the static cursor will store the result in tempdb, they are always read-on
 We can use the static cursor to move both forward and backward.
 
 Dynamic Cursors
-The dynamic cursors are opposite to the static cursors that allow us to perform the data updation, deletion, and insertion operations while the cursor is open. 
-It is scrollable by default. It can detect all changes made to the rows, order, and values in the result set, whether the changes occur inside the cursor or outside the cursor. 
+The dynamic cursors are opposite to the static cursors that allow us to perform 
+the data updation, deletion, and insertion operations while the cursor is open. 
+It is scrollable by default. It can detect all changes made to the rows, order,
+and values in the result set, whether the changes occur inside the cursor or outside the cursor. 
 Outside the cursor, we cannot see the updates until they are committed.
 
 Forward-Only Cursors
@@ -64,7 +66,8 @@ The Forward-Only cursors are three categorize into three types:
 Keyset Driven Cursors
 This cursor functionality lies between a static and a dynamic cursor regarding its ability to detect changes. 
 It can't always detect changes in the result set's membership and order like a static cursor. 
-It can detect changes in the result set's rows values as like a dynamic cursor. It can only move from the first to last and last to the first row. 
+It can detect changes in the result set's rows values as like a dynamic cursor. 
+It can only move from the first to last and last to the first row. 
 The order and the membership are fixed whenever this cursor is opened.*/
 
 --Sample clearing memory
@@ -243,7 +246,7 @@ FOR SELECT salary,empname FROM batch35
 
 OPEN B35Cursor
 
-FETCH Last FROM B35Cursor --FETCH FIRST CANNOT BE USED WITH FORWARD ONLY
+FETCH first FROM B35Cursor --FETCH FIRST CANNOT BE USED WITH FORWARD ONLY
 
 WHILE @@FETCH_STATUS = 0
 
@@ -269,6 +272,7 @@ CLOSE Cursor1
 DEALLOCATE Cursor1
 
 --Example 8
+use trainees
 DECLARE Cursor2 CURSOR SCROLL --DYNAMIC CURSOR
 
 FOR SELECT salary,empname FROM batch35
@@ -319,7 +323,6 @@ FETCH LAST FROM B35Cursor2
 CLOSE B35Cursor2
 
 DEALLOCATE B35Cursor2
-
 
 /*
 1.FETCH NEXT	
@@ -404,3 +407,64 @@ DEALLOCATE B35Cursor2
 SELECT salary,empname FROM batch35
 
 delete from batch35 where empname='sam';
+
+---------------------------------------
+--REAL-TIME EXAMPLE
+use trainees;
+CREATE TABLE Students
+    (  
+      Id INT ,  
+      RollNo INT ,  
+      EnrollmentNo NVARCHAR(15) ,  
+      Name NVARCHAR(50) ,  
+      Branch NVARCHAR(50) ,  
+      University NVARCHAR(50)  
+    )  
+
+INSERT  INTO Students  
+        ( Id, RollNo, EnrollmentNo, Name, Branch, University )  
+VALUES  ( 1, 1, N'', N'John', N'CE', N'Oxford University' ),  
+        ( 2, 2, N'', N'Peter', N'CE', N'Oxford University' ),  
+        ( 3, 3, N'', N'Sam', N'IT', N'Oxford University' ),  
+        ( 4, 4, N'', N'Dean', N'CE', N'Oxford University' ),  
+        ( 5, 5, N'', N'Jancy', N'CE', N'Oxford University' ),  
+        ( 5, 5, N'', N'Andrea', N'EC', N'Oxford University' ),  
+        ( 6, 6, N'', N'Shaun', N'ME', N'Oxford University' )  
+
+SELECT * FROM Students
+--CURSOR 
+DECLARE @Id INT ,  
+@RollNo INT,  
+@Branch NVARCHAR(50) ,  
+@Year AS INT  
+   
+SET @Year = RIGHT(YEAR(GETDATE()), 2)  -- RIGHT(2023,2) -> 23
+   
+DECLARE MY_data CURSOR  
+FOR  
+    SELECT  Id ,  
+            Branch,  
+            RollNo,  
+            @Year  
+    FROM    Students  
+   
+OPEN MY_data  
+FETCH NEXT FROM MY_data INTO @Id, @Branch, @RollNo,@Year  
+WHILE @@FETCH_STATUS = 0  
+    BEGIN  
+        DECLARE @EnrollmentNo NVARCHAR(15)  
+                SET @EnrollmentNo = 'SOE' + CAST(@Year AS VARCHAR(2)) + CAST(@Branch AS NVARCHAR(50)) + '000' + CAST(@RollNo AS NVARCHAR(10))  
+                  
+                UPDATE Students SET EnrollmentNo =  @EnrollmentNo WHERE Id =  @Id  
+   
+        FETCH NEXT FROM MY_data INTO  @Id, @Branch, @RollNo,@Year 
+    END			
+SELECT * FROM Students
+CLOSE MY_data  
+DEALLOCATE MY_data
+
+--"EnrollmentNo" where "SOE" Indicates "School of Engineering",
+--23 Indicates Last Two Digits of Current Year and 
+--Last Digits of EnrollmentNo Indicates the RollNo of Student and 
+--finally update the column "EnrollmentNo" in table Students 
+--with New Generated EnrollmentNo based on unique Identity column @Id for each and every student in the table.
