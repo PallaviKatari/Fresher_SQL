@@ -590,3 +590,6 @@ select * from dbo.recipe
 insert into dbo.recipe(name,category,steps,ing01,ing02,ing03)values('Coffee','Beverage','3','MIlk','Sugar','Coffee Powder')
 
 delete from dbo.recipe where id=1
+
+
+

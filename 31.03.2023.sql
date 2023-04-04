@@ -222,18 +222,18 @@ CREATE TABLE #TBLTEMP (
   Id int not null PRIMARY KEY
   )
   
-INSERT INTO #TBLTEMP (Id) VALUES (1),(2)
+INSERT INTO #TBLTEMP (Id) VALUES (1),(2),(3)
   
 DECLARE csr CURSOR KEYSET FOR SELECT Id FROM #TBLTEMP ORDER BY Id
 OPEN Csr --Keyset Cursor
 FETCH NEXT FROM csr INTO @Id
   
-SELECT id FROM #TBLTEMP
+SELECT id FROM #TBLTEMP --1,2,3
 DELETE FROM #TBLTEMP WHERE Id = 2
   
 FETCH NEXT FROM csr INTO @Id
-SELECT id FROM #TBLTEMP  
-SELECT @@FETCH_STATUS as [Fetch_Status]
+SELECT id FROM #TBLTEMP  --1,3
+SELECT @@FETCH_STATUS as [Fetch_Status] -- -2
   
 CLOSE csr
 DEALLOCATE csr
@@ -431,6 +431,7 @@ VALUES  ( 1, 1, N'', N'John', N'CE', N'Oxford University' ),
         ( 5, 5, N'', N'Andrea', N'EC', N'Oxford University' ),  
         ( 6, 6, N'', N'Shaun', N'ME', N'Oxford University' )  
 
+		truncate table students
 SELECT * FROM Students
 --CURSOR 
 DECLARE @Id INT ,  
