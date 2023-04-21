@@ -37,6 +37,7 @@ alter schema S2 transfer s1.t1
 
 select * from batch35
 select 'My name is ' + empname as Details from batch35
+select 'My id is ' + CAST(empid as varchar(20)) as Details from batch35
 
 --Computed column
 create table demo
